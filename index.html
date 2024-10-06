@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Andika:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <title>Document</title>
+    <style>
+        *{
+            padding:0;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="home"><button class="A" id="connectButton">Wallet</button>
+        <button id="disconnectButton" style="display: none">Disconnect</button>
+        <span
+          id="walletAddress"
+          style="margin-left: 10px; color: #546747; font-family: Abhaya Libre"
+        ></span>
+        <button class="B" onclick="document.location='product.html'">Product</button>
+    </div>
+
+    
+</body><script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"></script>
+    <script src="wallet.js"></script>
+    <script src="deploy.js"></script>
+</html>

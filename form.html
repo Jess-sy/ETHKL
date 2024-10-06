@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Form</title>
+    <link href="form.css" rel="stylesheet" />
+  </head>
+  <style>
+    body {
+  background-color: #4a4a46;
+}
+
+.connectBtn {
+  width: 220px;
+  height: 60px;
+  padding: 0px 10px 0px 10px;
+  background: #5b5b5b;
+  color: #f8f0c2;
+  border-color: #23232300;
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 23px 23px 23px 23px;
+  font-family: "Abhaya Libre";
+  font-weight: bold;
+  font-size: 24px;
+  text-align: center;
+  margin-left: 500px;
+}
+.header {
+    width:100%;
+  position: fixed;
+  top: 0;
+  right: 0;
+  background: #f8f9fa;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  z-index: 1000; 
+}
+.header button {
+  padding: 5px 10px;
+  border: none;
+  cursor: pointer;
+}
+.wallet-info {
+  margin-left: 10px;
+  font-family: Arial, sans-serif;
+}
+.content {
+  margin-top: 80px;
+  padding: 20px;
+}
+
+.container {
+  width: 500px;
+  height: auto;
+  background-color: white;
+  margin-left: auto;
+  margin-right: auto;
+  border-style: solid;
+  padding: 10px;
+}
+.file {
+  top: 390px;
+  left: 20px;
+}
+
+.submitBtn {
+  width: 220px;
+  height: 60px;
+  padding: 0px 10px 0px 10px;
+  background: #5b5b5b;
+  color: #f8f0c2;
+  border-color: #23232300;
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 23px 23px 23px 23px;
+  font-family: "Abhaya Libre";
+  font-weight: bold;
+  font-size: 24px;
+  text-align: center;
+}
+  </style>
+  <body>
+    <div class="header">
+      <button class="connectBtn" id="connectButton">Connect Wallet</button>
+      <button class="connectBtn" id="disconnectButton" style="display: none">
+        Disconnect Wallet
+      </button>
+      <span id="walletAddress" class="wallet-info">Not connected</span>
+    </div>
+    <button style="position:absolute; margin-left: 90%; background-color: #313131;
+    border: 1px solid #454545;color:aliceblue; border-radius: 20%;width: 5%;height:5%;" onclick="document.location='product.html'">Back</button>
+
+    <div class="content">
+      <h1 style="text-align: center">~ FORM ~</h1>
+      <div class="container">
+        <form action="">
+          <h2>Policy Holder Information</h2>
+          <label for="">Full Name as per IC/Passport</label>
+          <input type="text" />
+          <br /><br />
+          <label for="">Phone number</label>
+          <input type="text" />
+          <label for="">Email</label>
+          <input type="text" />
+          <br /><br />
+          <label for="">Address</label><br />
+          <textarea name="" id=""></textarea><br /><br />
+
+          <h2>Policy Details</h2>
+          <label for="">Product Type</label>
+          <select name="" id="">
+            <option value="">Bag</option>
+            <option value="">Watch</option>
+          </select>
+          <br /><br />
+          <label for="">Company</label>
+          <input type="text" />
+          <br />
+          <br />
+          <h2>Documents</h2>
+          <input class="file" type="file" id="myFile" name="filename" />
+          <br /><br />
+          <button class="submitBtn" type="submit" id="submitButton">
+            Submit
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"></script>
+    <script>
+      let provider;
+      let signer;
+
+      async function connectWallet() {
+        if (typeof window.ethereum !== "undefined") {
+          try {
+            const accounts = await ethereum.request({
+              method: "eth_requestAccounts",
+            });
+            if (accounts.length > 0) {
+              provider = new ethers.providers.Web3Provider(window.ethereum);
+              signer = provider.getSigner();
+              const userAddress = await signer.getAddress();
+              document.getElementById("walletAddress").innerText = userAddress;
+              document.getElementById("disconnectButton").style.display =
+                "inline-block";
+              document.getElementById("connectButton").style.display = "none";
+              localStorage.setItem("walletAddress", userAddress);
+            } else {
+              alert("No account found. Please connect to MetaMask.");
+            }
+          } catch (error) {
+            console.error(error);
+            alert("Error connecting to MetaMask");
+          }
+        } else {
+          alert(
+            "MetaMask is not installed. Please install it to use this dApp."
+          );
+        }
+      }
+
+      function disconnectWallet() {
+        document.getElementById("walletAddress").innerText = "Not connected";
+        provider = null;
+        signer = null;
+        localStorage.removeItem("walletAddress");
+        document.getElementById("disconnectButton").style.display = "none";
+        document.getElementById("connectButton").style.display = "inline-block";
+        alert(
+          "Please disconnect from MetaMask or switch accounts to ensure a fresh connection next time."
+        );
+      }
+
+      document
+        .getElementById("connectButton")
+        .addEventListener("click", connectWallet);
+      document
+        .getElementById("disconnectButton")
+        .addEventListener("click", disconnectWallet);
+
+      window.ethereum.on("accountsChanged", function (accounts) {
+        if (accounts.length > 0) {
+          document.getElementById("walletAddress").innerText = accounts[0];
+          localStorage.setItem("walletAddress", accounts[0]);
+        } else {
+          disconnectWallet();
+        }
+      });
+
+      window.ethereum.on("chainChanged", async (chainId) => {
+        if (provider) {
+          try {
+            provider = null;
+            signer = null;
+            await connectWallet();
+          } catch (error) {
+            console.error("Error reconnecting after network change:", error);
+            alert("Error reconnecting to MetaMask after network change.");
+          }
+        }
+      });
+
+      window.addEventListener("load", () => {
+        const storedAddress = localStorage.getItem("walletAddress");
+        if (storedAddress) {
+          document.getElementById("walletAddress").innerText = storedAddress;
+          document.getElementById("disconnectButton").style.display =
+            "inline-block";
+          document.getElementById("connectButton").style.display = "none";
+          provider = new ethers.providers.Web3Provider(window.ethereum);
+          signer = provider.getSigner();
+        }
+      });
+
+      const contractABI = [
+        {
+          inputs: [],
+          name: "claimInsurance",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [],
+          stateMutability: "nonpayable",
+          type: "constructor",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "address",
+              name: "user",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "claimAmount",
+              type: "uint256",
+            },
+          ],
+          name: "InsuranceClaimed",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "address",
+              name: "user",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "premiumPaid",
+              type: "uint256",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "claimableAmount",
+              type: "uint256",
+            },
+          ],
+          name: "InsurancePurchased",
+          type: "event",
+        },
+        {
+          inputs: [],
+          name: "purchaseInsurance",
+          outputs: [],
+          stateMutability: "payable",
+          type: "function",
+        },
+        {
+          stateMutability: "payable",
+          type: "receive",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "",
+              type: "address",
+            },
+          ],
+          name: "insurances",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "premiumPaid",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "claimableAmount",
+              type: "uint256",
+            },
+            {
+              internalType: "bool",
+              name: "hasClaimed",
+              type: "bool",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "owner",
+          outputs: [
+            {
+              internalType: "address",
+              name: "",
+              type: "address",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+      ];
+
+      const contractAddress = "0xF822F70b6294B468d796983ED5245dA1bAeb95ce";
+
+      async function claimInsurance() {
+        if (!provider || !signer) {
+          alert("Please connect your wallet first.");
+          return;
+        }
+
+        try {
+          // Initialize the contract
+          const contract = new ethers.Contract(
+            contractAddress,
+            contractABI,
+            signer
+          );
+
+          // Call the claimInsurance function
+          const tx = await contract.claimInsurance();
+
+          // Wait for the transaction to be mined
+          await tx.wait();
+          alert("Insurance claim submitted successfully!");
+        } catch (error) {
+          console.error("Error claiming insurance:", error);
+          alert("Failed to claim insurance. Please try again.");
+        }
+      }
+
+      // Attach the claimInsurance function to the submit button
+      document
+        .getElementById("submitButton")
+        .addEventListener("click", (event) => {
+          // Prevent the default form submission
+          event.preventDefault();
+          claimInsurance();
+        });
+    </script>
+  </body>
+</html>
