@@ -1,0 +1,41 @@
+{
+  "_format": "hh-sol-cache-2",
+  "files": {
+    "C:\\Users\\User\\OneDrive\\Documents\\APU\\Degree Y3 Sem 1\\ETHKL Hackathon\\scroll-guides-main\\scroll-guides-main\\LusChain - ETHKL24\\contracts\\LuxuryProductMarketplace.sol": {
+      "lastModificationDate": 1728168331925,
+      "contentHash": "e6cfaa84e693ac5859a69fe86ac76d89",
+      "sourceName": "contracts/LuxuryProductMarketplace.sol",
+      "solcConfig": {
+        "version": "0.8.9",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "london",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.9"
+      ],
+      "artifacts": [
+        "LuxuryProductMarketplace"
+      ]
+    }
+  }
+}
